@@ -2,7 +2,7 @@
 
 A Windows tool for cutting, pasting, and quoting PDFs. Usual disclaimers apply.
 
-Download directly [here](https://github.com/mhbeals/quotepdf/raw/master/QuotePDF_v_1_0_1.exe).
+Download directly [here](https://github.com/mhbeals/quotepdf/raw/master/QuotePDF_v_1_0_2.exe).
 
 CC-BY / MIT (2017) M. H. Beals
 
