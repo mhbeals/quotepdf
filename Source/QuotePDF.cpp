@@ -294,7 +294,7 @@ void RemoveLineBreaks()
 
 void RemoveCitations()
 {
-	std::wregex r_itc(L"( \\([\\w'\\. ]+, \\d{4}(, (p|pp)\\. [\\d-\u2013\u2014]+)*\\)| \\([\\w'\\. ]+\\d+\\))"); 
+	std::wregex r_itc(L" \\([\\w'\\. :,]*\\s*\\d{4}([,:]\\s*(p\\.|pp\\.)*\\s*[\\d-\u2013\u2014\\w]+)*\\)"); 
 	// (Name, Year, pp. 23-3) or (Name, Year) or (Name Year) or (Name Page)
 
 	std::wstring sBuffer; 
