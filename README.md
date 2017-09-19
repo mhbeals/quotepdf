@@ -1,10 +1,11 @@
-# QuotePDF v.1.0.2: 
+# QuotePDF v.1.0.3: 
 ## A Windows tool for cutting, pasting, and quoting PDFs. 
-MIT (2017) M. H. Beals
 
+*MIT License*
+*Copyright (c) 2017 M. H. Beals*
 
 ## Download
-Download directly [here](https://github.com/mhbeals/quotepdf/raw/master/QuotePDF_v_1_0_2.exe). If you receive an error message, you may need to manually update your installation of Windows to include the [Visual C++ Redistributable for Visual Studio 2015](https://www.microsoft.com/en-gb/download/details.aspx?id=48145).
+Download directly [here](https://github.com/mhbeals/quotepdf/raw/master/QuotePDF_v_1_0_3.exe). If you receive an error message, you may need to manually update your installation of Windows to include the [Visual C++ Redistributable for Visual Studio 2015](https://www.microsoft.com/en-gb/download/details.aspx?id=48145).
 
 
 ## Instructions for use:
