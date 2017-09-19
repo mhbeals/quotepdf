@@ -1,29 +1,28 @@
-// QuotePDF
-// M. H. Beals (2017) v.1.0 [Software]
+/// QuotePDF
+/// M. H. Beals (2017) v.1.0 [Software]
 
-// MIT License
-// Copyright(c) 2017 M. H. Beals
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files(the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// // to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions :
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+/// MIT License
+/// Copyright(c) 2017 M. H. Beals
+/// Permission is hereby granted, free of charge, to any person obtaining a copy
+/// of this software and associated documentation files(the "Software"), to deal
+/// in the Software without restriction, including without limitation the rights
+/// to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+/// copies of the Software, and to permit persons to whom the Software is
+/// furnished to do so, subject to the following conditions :
+/// The above copyright notice and this permission notice shall be included in all
+/// copies or substantial portions of the Software.
+///
+/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+/// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+/// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+/// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+/// SOFTWARE.
 
 #include "stdafx.h"
-#include "QuotePDF.h"
-#include <string>
-#include <regex>
+#include "Main.h"
+#include "C_PDFQuotation.h"
 
 #define MAX_LOADSTRING 100
 
@@ -31,7 +30,8 @@
 HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name											
-HMENU hMenu;
+
+// Global Menu Variables
 HWND hInput;
 HWND hOutput;
 HWND hAuthor;
@@ -46,9 +46,6 @@ LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 void				AddMenus(HWND);
 void				AddControls(HWND);
-void				RemoveLineBreaks();
-void				RemoveCitations();
-void				RemoveFootnotes();
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -85,8 +82,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     return (int) msg.wParam;
 }
-
-
 
 //
 //  FUNCTION: MyRegisterClass()
@@ -166,17 +161,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             int wmId = LOWORD(wParam);
             // Parse the menu selections:
-            switch (wmId)
-            {
+			switch (wmId)
+			{
 			case 1:
-				RemoveLineBreaks();
+			{
+				C_PDFQuotation PDFQuotation;
+				PDFQuotation.RemoveLineBreaks();
 				break;
+			}
 			case 2:
-				RemoveCitations();
+			{
+				C_PDFQuotation PDFQuotation;
+				PDFQuotation.RemoveCitations();
 				break;
+			}
 			case 3:
-				RemoveFootnotes();
+			{
+				C_PDFQuotation PDFQuotation;
+				PDFQuotation.RemoveFootnotes();
 				break;
+			}
 			case IDM_ABOUT:
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
                 break;
@@ -230,6 +234,7 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 void AddMenus(HWND hWnd)
 {
 	// Create File sub-menu
+	HMENU hMenu;
 	HMENU hFileMenu = CreateMenu();
 	AppendMenuW(hFileMenu, MF_STRING, IDM_ABOUT, L"About");
 	AppendMenuW(hFileMenu, MF_SEPARATOR, NULL, NULL);
@@ -259,66 +264,3 @@ void AddControls(HWND hWnd)
 	CreateWindowW(L"BUTTON", L"Footnotes", WS_VISIBLE | WS_CHILD, 870, 280, 100, 50, hWnd, (HMENU)3, NULL, NULL);
 }
 
-void RemoveLineBreaks()
-{
-	std::wregex r_lb(L"[\r\n]"); // Removes carriage returns or line breaks
-
-	std::wstring sBuffer;
-	std::wstring sReference;
-
-	wchar_t buffer[10240];
-	wchar_t cBuffer[300];
-
-	// Remove line breaks
-	GetWindowTextW(hInput, buffer, 10240);
-	sBuffer = std::regex_replace(buffer, r_lb, L" ");
-	
-	// Create citation
-	GetWindowTextW(hAuthor, cBuffer, 300);
-	sReference = cBuffer;
-	memset(cBuffer, NULL, sizeof(cBuffer));
-	GetWindowTextW(hTitle, cBuffer, 300);
-	sReference = L"\" [" + sReference + L", " + cBuffer + L", ";
-	memset(cBuffer, NULL, sizeof(cBuffer));
-	GetWindowTextW(hYear, cBuffer, 300);
-	sReference = sReference + cBuffer + L", ";
-	memset(cBuffer, NULL, sizeof(cBuffer));
-	GetWindowTextW(hPage, cBuffer, 300);
-	sReference = sReference + cBuffer + L"]";
-
-	sBuffer = L"\"" + sBuffer + sReference + std::wstring(1, NULL);
-
-	std::copy(sBuffer.begin(), sBuffer.end(), buffer);
-	SetWindowTextW(hOutput, buffer);
-}
-
-void RemoveCitations()
-{
-	std::wregex r_itc(L" \\([\\w'\\. :,]*\\s*\\d{4}([,:]\\s*(p\\.|pp\\.)*\\s*[\\d-\u2013\u2014\\w]+)*\\)"); 
-	// (Name, Year, pp. 23-3) or (Name, Year) or (Name Year) or (Name Page)
-
-	std::wstring sBuffer; 
-	wchar_t buffer[10240];
-	GetWindowTextW(hOutput, buffer, 10240);
-
-	// remove in text citations
-	sBuffer = std::regex_replace(buffer + std::wstring(1, NULL), r_itc, L"");
-
-	std::copy(sBuffer.begin(), sBuffer.end(), buffer);
-	SetWindowTextW(hOutput, buffer);
-}
-
-void RemoveFootnotes()
-{	
-	std::wregex r_fn(L"\\.\\d+"); //.123
-
-	std::wstring sBuffer;
-	wchar_t buffer[10240];
-	GetWindowTextW(hOutput, buffer, 10240);
-
-	// remove footnote numerals
-	sBuffer = std::regex_replace(buffer + std::wstring(1, NULL), r_fn, L".");  
-
-	std::copy(sBuffer.begin(), sBuffer.end(), buffer);
-	SetWindowTextW(hOutput, buffer);
-}
