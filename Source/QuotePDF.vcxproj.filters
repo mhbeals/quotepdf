@@ -48,7 +48,7 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="QuotePDF.ico">
+    <Image Include="QuotationPDF.ico">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

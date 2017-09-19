@@ -159,7 +159,7 @@
     <ResourceCompile Include="QuotePDF.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="QuotePDF.ico" />
+    <Image Include="QuotationPDF.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
