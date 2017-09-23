@@ -33,13 +33,11 @@ void C_PDFQuotation::RemoveLineBreaks() // Removes carriage returns or line brea
 	// Removes carriage returns and simple line breaks
 	std::wregex r_lb(L"[\r\n]"); 
 
-	GetWindowTextW(hInput, w_QuotationBuffer, 10240);
-	str_Quotation = std::regex_replace(w_QuotationBuffer, r_lb, L" ");	
-
 	CreateQuotationCitation();
 
+	GetWindowTextW(hInput, w_QuotationBuffer, 10240);
+	str_Quotation = std::regex_replace(w_QuotationBuffer, r_lb, L" ");	
 	str_Quotation = L"\"" + str_Quotation + str_Citation + std::wstring(1, NULL);
-
 	std::copy(str_Quotation.begin(), str_Quotation.end(), w_QuotationBuffer);
 	SetWindowTextW(hOutput, w_QuotationBuffer);
 }
@@ -52,7 +50,6 @@ void  C_PDFQuotation::RemoveCitations() // Removes in-text citations
 	
 	GetWindowTextW(hOutput, w_QuotationBuffer, 10240);
 	str_Quotation = std::regex_replace(w_QuotationBuffer + std::wstring(1, NULL), r_itc, L"");
-
 	std::copy(str_Quotation.begin(), str_Quotation.end(), w_QuotationBuffer);
 	SetWindowTextW(hOutput, w_QuotationBuffer);
 }
@@ -65,7 +62,6 @@ void  C_PDFQuotation::RemoveFootnotes() // Removes footnote numerals
 
 	GetWindowTextW(hOutput, w_QuotationBuffer, 10240);
 	str_Quotation = std::regex_replace(w_QuotationBuffer + std::wstring(1, NULL), r_fn, L".");
-
 	std::copy(str_Quotation.begin(), str_Quotation.end(), w_QuotationBuffer);
 	SetWindowTextW(hOutput, w_QuotationBuffer);
 }

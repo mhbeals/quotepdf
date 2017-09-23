@@ -1,5 +1,5 @@
 /// QuotePDF
-/// M. H. Beals (2017) v.1.0 [Software]
+/// M. H. Beals (2017) v.1.0.5 [Software]
 
 /// MIT License
 /// Copyright(c) 2017 M. H. Beals
@@ -102,7 +102,6 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_QuotePDF));
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_QuotePDF);
     wcex.lpszClassName  = szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
@@ -160,7 +159,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);
-            // Parse the menu selections:
 			switch (wmId)
 			{
 			case 1:
@@ -181,6 +179,28 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				PDFQuotation.RemoveFootnotes();
 				break;
 			}
+			case 4:
+			{
+				wchar_t w_pageBuffer[5];
+				std::wstring str_pageBuffer;
+				GetWindowTextW(hPage, w_pageBuffer, 5);
+				if (isdigit(w_pageBuffer[0]) && std::stoi(w_pageBuffer) > 0)
+					str_pageBuffer = std::to_wstring(std::stoi(w_pageBuffer) + 1) + std::wstring(1, NULL);
+				std::copy(str_pageBuffer.begin(), str_pageBuffer.end(), w_pageBuffer);
+				SetWindowTextW(hPage, w_pageBuffer);
+				break;
+			}
+			case 5:
+			{
+				wchar_t w_pageBuffer[5];
+				std::wstring str_pageBuffer;
+				GetWindowTextW(hPage, w_pageBuffer, 5);
+				if (isdigit(w_pageBuffer[0]) && std::stoi(w_pageBuffer) > 0)
+					str_pageBuffer = std::to_wstring(std::stoi(w_pageBuffer) - 1) + std::wstring(1, NULL);
+				std::copy(str_pageBuffer.begin(), str_pageBuffer.end(), w_pageBuffer);
+				SetWindowTextW(hPage, w_pageBuffer);
+				break;
+			}
 			case IDM_ABOUT:
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
                 break;
@@ -196,7 +216,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: Add any drawing code that uses hdc here...
             EndPaint(hWnd, &ps);
         }
         break;
@@ -257,7 +276,9 @@ void AddControls(HWND hWnd)
 	hAuthor = CreateWindowW(L"edit", L"Name", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_AUTOHSCROLL, 870, 50, 100, 25, hWnd, NULL, NULL, NULL);
 	hTitle = CreateWindowW(L"edit", L"Title", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_AUTOHSCROLL, 870, 80, 100, 25, hWnd, NULL, NULL, NULL);
 	hYear = CreateWindowW(L"edit", L"Year", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_AUTOHSCROLL, 870, 110, 100, 25, hWnd, NULL, NULL, NULL);
-	hPage = CreateWindowW(L"edit", L"##-##", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_AUTOHSCROLL, 870, 140, 100, 25, hWnd, NULL, NULL, NULL);
+	hPage = CreateWindowW(L"edit", L"##", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_AUTOHSCROLL, 870, 140, 100, 25, hWnd, NULL, NULL, NULL);
+	CreateWindowW(L"BUTTON", L"+", WS_VISIBLE | WS_CHILD, 975, 140, 10, 10, hWnd, (HMENU)4, NULL, NULL);
+	CreateWindowW(L"BUTTON", L"-", WS_VISIBLE | WS_CHILD, 975, 152, 10, 10, hWnd, (HMENU)5, NULL, NULL);
 
 	CreateWindowW(L"BUTTON", L"Line Breaks", WS_VISIBLE | WS_CHILD, 870, 170, 100, 50, hWnd, (HMENU)1, NULL, NULL);
 	CreateWindowW(L"BUTTON", L"Citations", WS_VISIBLE | WS_CHILD, 870, 225, 100, 50, hWnd, (HMENU)2, NULL, NULL);
