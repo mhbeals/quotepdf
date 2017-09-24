@@ -6,7 +6,7 @@
 
 
 ## Download
-Download directly [here](https://github.com/mhbeals/quotepdf/raw/master/QuotePDF_v_1_0_4.exe). If you receive an error message, you may need to manually update your installation of Windows to include the [Visual C++ Redistributable for Visual Studio 2015](https://www.microsoft.com/en-gb/download/details.aspx?id=48145).
+Download directly [here](https://github.com/mhbeals/quotepdf/raw/master/QuotePDF.exe). If you receive an error message, you may need to manually update your installation of Windows to include the [Visual C++ Redistributable for Visual Studio 2015](https://www.microsoft.com/en-gb/download/details.aspx?id=48145).
 
 
 ## Instructions for use:
