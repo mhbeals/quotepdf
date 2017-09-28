@@ -1,4 +1,4 @@
-# QuotePDF v.1.0.5: 
+# QuotePDF v.1.0.6 
 ## A Windows tool for cutting, pasting, and quoting PDFs. 
 
 *MIT License*
@@ -10,7 +10,7 @@ Download directly [here](https://github.com/mhbeals/quotepdf/raw/master/QuotePDF
 
 
 ## Instructions for use:
-To remove line breaks, simply paste text into the left-hand box and press "Line Breaks". This will strip the text of all carriage returns (\r) and line breaks (\n). Once you have removed the line breaks, you can also remove in-text citations or footnotes by pressing the appropriate button. Fill in the meta-data boxes on the right-hand side to create a short-form citation that will be attached to your re-formatted quotation. Using the + and - buttons will increase or decrease numeric page numbers.
+To remove line breaks, simply paste text into the left-hand box and press "Line Breaks". This will strip the text of all carriage returns (\r) and line breaks (\n). Once you have removed the line breaks, you can also remove in-text citations or footnotes by pressing the appropriate button. Fill in the meta-data boxes on the right-hand side to create a short-form citation that will be attached to your re-formatted quotation. Using the + and - buttons will increase or decrease page numbers.
 
 
 ### Currently supported in-text citation formats:
