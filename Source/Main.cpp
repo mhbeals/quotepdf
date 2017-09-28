@@ -1,5 +1,5 @@
 /// QuotePDF
-/// M. H. Beals (2017) v.1.0.5 [Software]
+/// M. H. Beals (2017) v.1.0.6 [Software]
 
 /// MIT License
 /// Copyright(c) 2017 M. H. Beals
@@ -23,13 +23,9 @@
 #include "stdafx.h"
 #include "Main.h"
 #include "C_PDFQuotation.h"
+#include "C_Citations.h"
 
 #define MAX_LOADSTRING 100
-
-// Global Variables:
-HINSTANCE hInst;                                // current instance
-WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
-WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name											
 
 // Global Menu Variables
 HWND hInput;
@@ -39,7 +35,12 @@ HWND hTitle;
 HWND hYear;
 HWND hPage;
 
-// Forward declarations of functions included in this code module:
+// Global Variables:
+HINSTANCE hInst;                                // current instance
+WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
+WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
+
+												// Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -48,40 +49,44 @@ void				AddMenus(HWND);
 void				AddControls(HWND);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-                     _In_opt_ HINSTANCE hPrevInstance,
-                     _In_ LPWSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
+	_In_opt_ HINSTANCE hPrevInstance,
+	_In_ LPWSTR    lpCmdLine,
+	_In_ int       nCmdShow)
 {
-    UNREFERENCED_PARAMETER(hPrevInstance);
-    UNREFERENCED_PARAMETER(lpCmdLine);
+	UNREFERENCED_PARAMETER(hPrevInstance);
+	UNREFERENCED_PARAMETER(lpCmdLine);
 
-    // Initialize global strings
-    LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_QuotePDF, szWindowClass, MAX_LOADSTRING);
-    MyRegisterClass(hInstance);
+	// TODO: Place code here.
 
-    // Perform application initialization:
-    if (!InitInstance (hInstance, nCmdShow))
-    {
-        return FALSE;
-    }
+	// Initialize global strings
+	LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
+	LoadStringW(hInstance, IDC_QuotePDF, szWindowClass, MAX_LOADSTRING);
+	MyRegisterClass(hInstance);
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_QuotePDF));
+	// Perform application initialization:
+	if (!InitInstance(hInstance, nCmdShow))
+	{
+		return FALSE;
+	}
 
-    MSG msg;
+	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_QuotePDF));
 
-    // Main message loop:
-    while (GetMessage(&msg, nullptr, 0, 0))
-    {
-        if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
-        {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
-    }
+	MSG msg;
 
-    return (int) msg.wParam;
+	// Main message loop:
+	while (GetMessage(&msg, nullptr, 0, 0))
+	{
+		if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+	}
+
+	return (int)msg.wParam;
 }
+
+
 
 //
 //  FUNCTION: MyRegisterClass()
@@ -90,22 +95,22 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 //
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
-    WNDCLASSEXW wcex;
+	WNDCLASSEXW wcex;
 
-    wcex.cbSize = sizeof(WNDCLASSEX);
+	wcex.cbSize = sizeof(WNDCLASSEX);
 
-    wcex.style          = CS_HREDRAW | CS_VREDRAW;
-    wcex.lpfnWndProc    = WndProc;
-    wcex.cbClsExtra     = 0;
-    wcex.cbWndExtra     = 0;
-    wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_QuotePDF));
-    wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszClassName  = szWindowClass;
-    wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+	wcex.style = CS_HREDRAW | CS_VREDRAW;
+	wcex.lpfnWndProc = WndProc;
+	wcex.cbClsExtra = 0;
+	wcex.cbWndExtra = 0;
+	wcex.hInstance = hInstance;
+	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_QuotePDF));
+	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_QuotePDF);	wcex.lpszClassName = szWindowClass;
+	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
-    return RegisterClassExW(&wcex);
+	return RegisterClassExW(&wcex);
 }
 
 //
@@ -120,21 +125,20 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
-   hInst = hInstance; // Store instance handle in our global variable
+	hInst = hInstance; // Store instance handle in our global variable
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      100, 50, 1030, 600, nullptr, nullptr, hInstance, nullptr);
-   
+	HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
-   if (!hWnd)
-   {
-      return FALSE;
-   }
+	if (!hWnd)
+	{
+		return FALSE;
+	}
 
-   ShowWindow(hWnd, nCmdShow);
-   UpdateWindow(hWnd);
+	ShowWindow(hWnd, nCmdShow);
+	UpdateWindow(hWnd);
 
-   return TRUE;
+	return TRUE;
 }
 
 //
@@ -149,104 +153,101 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    switch (message)
-    {
+	switch (message)
+	{
 	case WM_CREATE:
+	{
 		AddControls(hWnd);
 		AddMenus(hWnd);
-		break;
-	
+	}
 	case WM_COMMAND:
-        {
-            int wmId = LOWORD(wParam);
-			switch (wmId)
-			{
-			case 1:
-			{
-				C_PDFQuotation PDFQuotation;
-				PDFQuotation.RemoveLineBreaks();
-				break;
-			}
-			case 2:
-			{
-				C_PDFQuotation PDFQuotation;
-				PDFQuotation.RemoveCitations();
-				break;
-			}
-			case 3:
-			{
-				C_PDFQuotation PDFQuotation;
-				PDFQuotation.RemoveFootnotes();
-				break;
-			}
-			case 4:
-			{
-				wchar_t w_pageBuffer[5];
-				std::wstring str_pageBuffer;
-				GetWindowTextW(hPage, w_pageBuffer, 5);
-				if (isdigit(w_pageBuffer[0]) && std::stoi(w_pageBuffer) > 0)
-					str_pageBuffer = std::to_wstring(std::stoi(w_pageBuffer) + 1) + std::wstring(1, NULL);
-				std::copy(str_pageBuffer.begin(), str_pageBuffer.end(), w_pageBuffer);
-				SetWindowTextW(hPage, w_pageBuffer);
-				break;
-			}
-			case 5:
-			{
-				wchar_t w_pageBuffer[5];
-				std::wstring str_pageBuffer;
-				GetWindowTextW(hPage, w_pageBuffer, 5);
-				if (isdigit(w_pageBuffer[0]) && std::stoi(w_pageBuffer) > 0)
-					str_pageBuffer = std::to_wstring(std::stoi(w_pageBuffer) - 1) + std::wstring(1, NULL);
-				std::copy(str_pageBuffer.begin(), str_pageBuffer.end(), w_pageBuffer);
-				SetWindowTextW(hPage, w_pageBuffer);
-				break;
-			}
-			case IDM_ABOUT:
-                DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-                break;
-            case IDM_EXIT:
-                DestroyWindow(hWnd);
-                break;
-            default:
-                return DefWindowProc(hWnd, message, wParam, lParam);
-            }
-        }
-        break;
-    case WM_PAINT:
-        {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
-            EndPaint(hWnd, &ps);
-        }
-        break;
-    case WM_DESTROY:
-        PostQuitMessage(0);
-        break;
-    default:
-        return DefWindowProc(hWnd, message, wParam, lParam);
-    }
-    return 0;
+	{
+		int wmId = LOWORD(wParam);
+		// Parse the menu selections:
+		switch (wmId)
+		{
+		case 1:
+		{
+			C_PDFQuotation PDFQuotation;
+			PDFQuotation.RemoveLineBreaks();
+			break;
+		}
+		case 2:
+		{
+			C_PDFQuotation PDFQuotation;
+			PDFQuotation.RemoveCitations();
+			break;
+		}
+		case 3:
+		{
+			C_PDFQuotation PDFQuotation;
+			PDFQuotation.RemoveFootnotes();
+			break;
+		}
+		case 4:
+		{
+			C_Citations Citation;
+			
+			GetWindowTextW(hPage, Citation.w_pageBuffer, 25);
+			Citation.parsePageNumber(true);
+			SetWindowTextW(hPage, Citation.w_pageBuffer);
+			break;
+		}
+		case 5:
+		{
+			C_Citations Citation;
+			
+			GetWindowTextW(hPage, Citation.w_pageBuffer, 25);
+			Citation.parsePageNumber(false);
+			SetWindowTextW(hPage, Citation.w_pageBuffer);
+			break;
+		}
+		case IDM_ABOUT:
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
+			break;
+		case IDM_EXIT:
+			DestroyWindow(hWnd);
+			break;
+		default:
+			return DefWindowProc(hWnd, message, wParam, lParam);
+		}
+	}
+	break;
+	case WM_PAINT:
+	{
+		PAINTSTRUCT ps;
+		HDC hdc = BeginPaint(hWnd, &ps);
+		// TODO: Add any drawing code that uses hdc here...
+		EndPaint(hWnd, &ps);
+	}
+	break;
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		break;
+	default:
+		return DefWindowProc(hWnd, message, wParam, lParam);
+	}
+	return 0;
 }
 
 // Message handler for about box.
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    UNREFERENCED_PARAMETER(lParam);
-    switch (message)
-    {
-    case WM_INITDIALOG:
-        return (INT_PTR)TRUE;
+	UNREFERENCED_PARAMETER(lParam);
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		return (INT_PTR)TRUE;
 
-    case WM_COMMAND:
-        if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
-        {
-            EndDialog(hDlg, LOWORD(wParam));
-            return (INT_PTR)TRUE;
-        }
-        break;
-
-    }
-    return (INT_PTR)FALSE;
+	case WM_COMMAND:
+		if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
+		{
+			EndDialog(hDlg, LOWORD(wParam));
+			return (INT_PTR)TRUE;
+		}
+		break;
+	}
+	return (INT_PTR)FALSE;
 }
 
 
@@ -270,18 +271,17 @@ void AddMenus(HWND hWnd)
 // Function to create buttons and boxes
 void AddControls(HWND hWnd)
 {
-	hInput = CreateWindowW(L"edit", L"To remove line breaks from a piece of copied text,\r\nsimply paste the text into this box and press\r\n\"Line Breaks\".\r\n\r\nOnce you have removed the line breaks, you can also remove in-text citations or footnotes by pressing the\r\nappropriate button(s).", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_AUTOVSCROLL | ES_MULTILINE, 50, 50, 400, 450, hWnd, NULL, NULL, NULL);
-	hOutput = CreateWindowW(L"edit", L"Your text will appear here, with quotation marks and a\r\ncitation attached.", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_AUTOVSCROLL | ES_MULTILINE, 460, 50, 400, 450, hWnd, NULL, NULL, NULL);
+	hInput = CreateWindowW(L"edit", L"To remove line breaks from a piece of copied text,\r\nsimply paste the text into this box and press\r\n\"Line Breaks\".\r\n\r\nOnce you have removed the line breaks, you can also remove in-text citations or footnotes by pressing the\r\nappropriate button(s).\r\n\r\nPage numbers can be entered in arabic (1, 2, 3) or \r\nroman (i, ii, iii) numerals, and incremented using the +/- buttons.", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_AUTOVSCROLL | ES_MULTILINE, 50, 25, 400, 415, hWnd, NULL, NULL, NULL);
+	hOutput = CreateWindowW(L"edit", L"Your text will appear here, with quotation marks and a\r\ncitation attached.", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_AUTOVSCROLL | ES_MULTILINE, 460, 25, 400, 415, hWnd, NULL, NULL, NULL);
 
-	hAuthor = CreateWindowW(L"edit", L"Name", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_AUTOHSCROLL, 870, 50, 100, 25, hWnd, NULL, NULL, NULL);
-	hTitle = CreateWindowW(L"edit", L"Title", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_AUTOHSCROLL, 870, 80, 100, 25, hWnd, NULL, NULL, NULL);
-	hYear = CreateWindowW(L"edit", L"Year", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_AUTOHSCROLL, 870, 110, 100, 25, hWnd, NULL, NULL, NULL);
-	hPage = CreateWindowW(L"edit", L"##", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_AUTOHSCROLL, 870, 140, 100, 25, hWnd, NULL, NULL, NULL);
-	CreateWindowW(L"BUTTON", L"+", WS_VISIBLE | WS_CHILD, 975, 140, 10, 10, hWnd, (HMENU)4, NULL, NULL);
-	CreateWindowW(L"BUTTON", L"-", WS_VISIBLE | WS_CHILD, 975, 152, 10, 10, hWnd, (HMENU)5, NULL, NULL);
+	hAuthor = CreateWindowW(L"edit", L"Name", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_AUTOHSCROLL, 870, 25, 100, 25, hWnd, NULL, NULL, NULL);
+	hTitle = CreateWindowW(L"edit", L"Title", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_AUTOHSCROLL, 870, 55, 100, 25, hWnd, NULL, NULL, NULL);
+	hYear = CreateWindowW(L"edit", L"Year", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_AUTOHSCROLL, 870, 85, 100, 25, hWnd, NULL, NULL, NULL);
+	hPage = CreateWindowW(L"edit", L"##", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_AUTOHSCROLL, 870, 115, 100, 25, hWnd, NULL, NULL, NULL);
+	CreateWindowW(L"BUTTON", L"+", WS_VISIBLE | WS_CHILD, 975, 115, 10, 10, hWnd, (HMENU)4, NULL, NULL);
+	CreateWindowW(L"BUTTON", L"-", WS_VISIBLE | WS_CHILD, 975, 127, 10, 10, hWnd, (HMENU)5, NULL, NULL);
 
 	CreateWindowW(L"BUTTON", L"Line Breaks", WS_VISIBLE | WS_CHILD, 870, 170, 100, 50, hWnd, (HMENU)1, NULL, NULL);
 	CreateWindowW(L"BUTTON", L"Citations", WS_VISIBLE | WS_CHILD, 870, 225, 100, 50, hWnd, (HMENU)2, NULL, NULL);
 	CreateWindowW(L"BUTTON", L"Footnotes", WS_VISIBLE | WS_CHILD, 870, 280, 100, 50, hWnd, (HMENU)3, NULL, NULL);
 }
-
